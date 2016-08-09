@@ -1,0 +1,20 @@
+- hosts: slave 
+  remote_user: root
+
+  tasks:
+   - name: copy zip file 
+     copy: src=/home/xqy/versions/lastest-version.zip  dest=/usr/share/nginx/html/lastest-version.zip
+
+   - name: excute script 
+     script: /home/xqy/versions/unpackage.sh
+
+  handlers:
+   - name: delete zip file
+     file: path=/data/web/lastest-version.zip state=absent
+
+
+
+
+
+
+
