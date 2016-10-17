@@ -7,6 +7,12 @@ base_dir=$(cd `dirname $0`; pwd)
 #*****************************************************************************************
 cd $base_dir
 
+git_url='http://114.55.145.235:8787/root/store_shop.git'
+
+
+
+
+
 svn_file="./svn.txt"
 if [ -s $svn_file ];
 then
