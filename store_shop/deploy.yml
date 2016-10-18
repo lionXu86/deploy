@@ -1,0 +1,16 @@
+- hosts: slaves
+  remote_user: root
+  vars:
+    source_dir: "/tmp/deploy/store_shop"
+    target_dir: "/tmp/test2"
+
+  tasks:
+   - name: update
+     synchronize: src={{source_dir}} dest={{target_dir}} delete=yes
+
+
+
+
+
+
+

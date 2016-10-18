@@ -1,6 +1,14 @@
-[slaves]
-192.168.1.144
+[store_shop]
+114.55.145.235 ansible_ssh_user="root"
 
-[slaves:vars]
-ansible_ssh_user="root"
+[api]
+114.55.145.235 ansible_ssh_user="root"
 
+[auth]
+114.55.145.235 ansible_ssh_user="root"
+
+[operate]
+114.55.145.235 ansible_ssh_user="root"
+
+[activity]
+114.55.145.235 ansible_ssh_user="root"
