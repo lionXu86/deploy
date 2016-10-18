@@ -1,11 +1,13 @@
 #!/bash/sh
 #author xqy
 
-git_url='/tmp/test/store_shop'
+git_url='/tmp/test/store_shop/'
 
 #tmp file and dir
-deplay_dir="/tmp/test1/"
+deplay_dir="/tmp/deploy/store_shop/"
 source_zip=${deplay_dir}"source.zip"
+
+mkdir -p $deplay_dir
 
 #export dir
 base_dir=$(cd `dirname $0`; pwd)
@@ -23,10 +25,12 @@ echo "\nunzip complete!"
 
 rm -f $source_zip
 
+rm -rf $deplay_dir
+
 #*****************************************************************************************
 cd $base_dir
 #ansbile deploy
-ansible-playbook deploy.yml
+ansible-playbook deploy.yml -i /root/deploy/hosts
 
 
 echo "\n\nDeploy Success!\n\n"

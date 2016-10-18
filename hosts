@@ -1,0 +1,6 @@
+[slaves]
+192.168.1.144
+
+[slaves:vars]
+ansible_ssh_user="root"
+

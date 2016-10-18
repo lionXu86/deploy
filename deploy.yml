@@ -1,4 +1,4 @@
-- hosts: slave
+- hosts: slaves
   remote_user: root
   vars:
     source_dir: "/tmp/test1"
