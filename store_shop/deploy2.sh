@@ -12,10 +12,10 @@ WWW_ROOT=/data/demo/www
 WORKSPACE=/home/xqy/demo
 
 # 目标机的列表
-NODE_LIST="115.159.52.15"
+NODE_LIST="0.0.0.0"
 
 # 目标机ssh端口
-SSH_PORT="20521"
+SSH_PORT="22"
 
 # 操作
 action=$1
