@@ -23,6 +23,8 @@ action=$1
 # 版本号
 version=$2
 
+CTIME=$(date "+%Y-%m-%d")
+
 #判断是否正确输入需要发布的版本
 
 if [ -z "${version}" ]; then
@@ -52,6 +54,8 @@ if [ ${action} = "deploy" ]; then
         ssh root@$node -p${SSH_PORT} "ln -sv ${VERSION_ROOT}/${version} ${WWW_ROOT}"
         
         echo "发布成功"
+
+        exit 1
     done
 fi
 
@@ -82,11 +86,15 @@ if [ ${action} = "rollback" ];then
         
             echo "回退版本："${version}"不存在"
             
-            exit 2
+            exit 1
             
         fi
         
     done
 
-    echo "已成功回退到"${version}"版本" 
+    echo "已成功回退到"${version}"版本"
+
+    exit 1
 fi   
+
+echo "无效操作！"
