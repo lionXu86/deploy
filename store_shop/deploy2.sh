@@ -1,78 +1,92 @@
 #!/bin/bash
 
-#自定义全局变量
+#自定义全局常量
 
-VERSION_ROOT=/data/code/version
+# 目标机版本目录
+VERSION_ROOT=/data/demo/version
 
-WWW_ROOT=/data/web/www
+# 目标机的网站访问目录，软连接
+WWW_ROOT=/data/demo/www
 
-NODE_LIST="192.168.0.111"
+# 源项目的Git工作目录
+WORKSPACE=/home/xqy/demo
 
-CTIME=$(date "+%Y-%m-%d")
+# 目标机的列表
+NODE_LIST="115.159.52.15"
+
+# 目标机ssh端口
+SSH_PORT="20521"
+
+# 操作
+action=$1
+
+# 版本号
+version=$2
 
 #判断是否正确输入需要发布的版本
 
-if [ -z "${git}" ];then
+if [ -z "${version}" ]; then
 
-    echo -e "发布的版本号为空，请重新输入版本号后构建......"
+    echo -e "发布的版本号为空，请重新输入版本号后构建"
     
     exit 1
 
-else
+fi
 
 #判断为发布操作时，执行以下代码块
 
-if [ ${status} == "Deploy" ];then
+if [ ${action} = "deploy" ]; then
         
-#对节点列表进行发布代码
+    #对节点列表进行发布代码
 
-    for node in $NODE_LIST
-    do
-    
+    for node in $NODE_LIST; do
+
+        ssh root@$node -p${SSH_PORT} "mkdir -p ${VERSION_ROOT}/${version}/"
+
         # 使用rsync的方式将workspace的代码进行同步到目标主机，并进行软链接到站点根目录
-        
-        rsync -raz --delete --progress --exclude=cache --exclude=.git --exclude=.idea ${WORKSPACE}/ dengcom@$node:${VERSION_ROOT}/${git}/
+
+        rsync -raz --delete --progress --exclude=cache --exclude=.git --exclude=.idea -e "ssh -p ${SSH_PORT}" ${WORKSPACE}/ root@$node:${VERSION_ROOT}/${version}/
     
-        ssh dengcom@$node "rm -rf ${WWW_ROOT}"
+        ssh root@$node -p${SSH_PORT} "rm -rf ${WWW_ROOT}"
     
-        ssh dengcom@$node "ln -sv ${VERSION_ROOT}/${git} ${WWW_ROOT}"
+        ssh root@$node -p${SSH_PORT} "ln -sv ${VERSION_ROOT}/${version} ${WWW_ROOT}"
         
-        echo "发布成功......"
+        echo "发布成功"
     done
 fi
 
 
 #判断为回滚操作时，执行以下代码块
 
-if [ ${status} == "Rollback" ];then
+if [ ${action} = "rollback" ];then
 
-    echo "准备回退......"
+    echo "准备回退..."
         
+    #对节点列表进行回退版本
 
-#对节点列表进行回退版本
+    for node in $NODE_LIST; do
 
-for node in $NODE_LIST;do
-
-    #判断目标主机是否存在回滚的版本
-    
-    ssh dengcom@$node "ls -ld ${VERSION_ROOT}/${git}"
-    
-    res=$(echo $?)
-    
-    if [ $res == 0 ];then
+        #判断目标主机是否存在回滚的版本
         
-        ssh dengcom@$node "rm -rf ${WWW_ROOT}"
-
-        ssh dengcom@$node "ln -sv ${VERSION_ROOT}/${git} ${WWW_ROOT}"
-    
-    else
-    
-        echo "回退版本："${git}"不存在"
+        ssh root@$node -p${SSH_PORT} "ls -ld ${VERSION_ROOT}/${version}"
         
-        exit 2
+        res=$(echo $?)
         
-    fi
-    
-done
+        if [ $res = 0 ];then
+            
+            ssh root@$node -p${SSH_PORT} "rm -rf ${WWW_ROOT}"
 
-echo "已成功回退到"${git}"版本......"    
+            ssh root@$node -p${SSH_PORT} "ln -sv ${VERSION_ROOT}/${version} ${WWW_ROOT}"
+        
+        else
+        
+            echo "回退版本："${version}"不存在"
+            
+            exit 2
+            
+        fi
+        
+    done
+
+    echo "已成功回退到"${version}"版本" 
+fi   
