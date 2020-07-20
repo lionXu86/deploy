@@ -3,13 +3,13 @@
 #自定义全局常量
 
 # 目标机版本目录
-VERSION_ROOT=/data/demo/version
+VERSION_ROOT=/data/www/*项目*/version
 
 # 目标机的网站访问目录，软连接
-WWW_ROOT=/data/demo/www
+WWW_ROOT=/data/www/*项目*/www
 
 # 源项目的Git工作目录
-WORKSPACE=/home/xqy/demo
+WORKSPACE=/*工作目录*
 
 # 目标机的列表
 NODE_LIST="0.0.0.0"
